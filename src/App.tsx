@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {createContext, memo, useEffect, useState} from 'react';
+import styles from './App.module.scss';
+import Content from "./Components/Content/Content";
+import {ICourses, ITagsContext} from "./Types/types";
+import getCourses from "./Api/getCourses";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+export const TagsContext = createContext<ITagsContext | null>(null);
+
+const DEFAULT_THEME = "Все темы";
+
+const INITIAL_TAGS = [DEFAULT_THEME]
+
+const App = memo(() => {
+      const [activeTag, setActiveTags] = useState<string>(DEFAULT_THEME)
+      const [courses, setCourses] = useState<ICourses[]>([])
+
+      const tags = courses.reduce<string[]>((acc, el) => {
+        const temp = [...acc]
+        el.tags.forEach(tag => {
+          if (!temp.includes(tag)) {
+            temp.push(tag)
+          }
+        })
+
+        return temp
+      }, INITIAL_TAGS) ?? INITIAL_TAGS
+
+      const activeCourses = activeTag === DEFAULT_THEME
+          ? courses
+          : courses.filter(el => el.tags.includes(activeTag))
+
+      useEffect(() => {
+        getCourses().then(setCourses);
+      }, [])
+
+      return (
+          <div className={styles.App}>
+            <TagsContext.Provider value={{tags, courses: activeCourses, active: activeTag, setActive: setActiveTags}}>
+              <Content/>
+            </TagsContext.Provider>
+          </div>
+      );
+    }
+)
 
 export default App;
+

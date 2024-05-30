@@ -1,0 +1,6 @@
+.courses {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 18px;
+  align-self: start
+}

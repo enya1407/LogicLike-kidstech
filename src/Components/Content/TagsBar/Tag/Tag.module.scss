@@ -1,0 +1,27 @@
+.tag {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  padding-left: 12px;
+  cursor: pointer;
+
+  span {
+    color: #39414B;
+    font-family: "Nunito", sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.activeTag {
+  composes: tag;
+  background-color: #5FBF77;
+
+  span {
+    color: #FFFFFF;
+  }
+}
